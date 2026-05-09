@@ -1,0 +1,76 @@
+<div class="container">
+  <div class="glass-card">
+    <h2>Add New Test</h2>
+    <div *ngIf="message" class="toast">{{ message }}</div>
+    
+    <form [formGroup]="testForm" (ngSubmit)="onSubmit()" class="form-grid">
+      <div class="form-group">
+        <label>Test Name</label>
+        <input type="text" formControlName="testName" placeholder="e.g. Complete Blood Count">
+      </div>
+      
+      <div class="form-group">
+        <label>Test Code</label>
+        <input type="text" formControlName="testCode" placeholder="e.g. CBC-01">
+      </div>
+      
+      <div class="form-group">
+        <label>Sample Type</label>
+        <select formControlName="sampleType">
+          <option value="">Select Sample Type</option>
+          <option value="Blood">Blood</option>
+          <option value="Urine">Urine</option>
+          <option value="Swab">Swab</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Normal Range</label>
+        <input type="text" formControlName="normalRange" placeholder="e.g. 70-100 mg/dL">
+      </div>
+
+      <div class="form-group">
+        <label>Price (₹)</label>
+        <input type="number" formControlName="price" placeholder="e.g. 500">
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="testForm.invalid">Add Test</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="glass-card mt-4">
+    <div class="header-flex">
+      <h2>Available Tests</h2>
+      <input type="text" class="search-input" placeholder="Search tests..." (input)="onSearch($event)">
+    </div>
+    
+    <div class="table-container">
+      <div *ngIf="loading" class="spinner">Loading...</div>
+      <table *ngIf="!loading">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Sample Type</th>
+            <th>Normal Range</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let test of tests">
+            <td><span class="badge">{{ test.testCode }}</span></td>
+            <td>{{ test.testName }}</td>
+            <td>{{ test.sampleType }}</td>
+            <td>{{ test.normalRange }}</td>
+            <td>₹{{ test.price }}</td>
+          </tr>
+          <tr *ngIf="tests.length === 0">
+            <td colspan="5" class="text-center">No tests found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

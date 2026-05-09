@@ -1,0 +1,79 @@
+<div class="container">
+  
+  <div class="grid-2-col">
+    <!-- Pending List -->
+    <div class="glass-card">
+      <h2>Pending Results</h2>
+      <div class="list-group">
+        <div *ngFor="let report of pendingReports" class="list-item" (click)="selectReport(report)" [class.active]="selectedResult?.id === report.id">
+          <div class="list-content">
+            <strong>{{ report.testOrder?.orderNumber }}</strong>
+            <span>{{ report.testOrder?.patientName }}</span>
+            <small>{{ report.testOrder?.testMaster?.testName }}</small>
+          </div>
+          <span class="badge pending">Pending</span>
+        </div>
+        <div *ngIf="pendingReports.length === 0" class="text-center p-3">No pending results.</div>
+      </div>
+    </div>
+
+    <!-- Entry Form -->
+    <div class="glass-card" *ngIf="selectedResult">
+      <h2>Enter Result for {{ selectedResult.testOrder?.orderNumber }}</h2>
+      <div *ngIf="message" class="toast">{{ message }}</div>
+      
+      <div class="info-box mb-3">
+        <p><strong>Test:</strong> {{ selectedResult.testOrder?.testMaster?.testName }}</p>
+        <p><strong>Normal Range:</strong> {{ selectedResult.testOrder?.testMaster?.normalRange }}</p>
+      </div>
+
+      <form [formGroup]="resultForm" (ngSubmit)="onSubmit()" class="form-vertical">
+        <div class="form-group">
+          <label>Result Value</label>
+          <input type="text" formControlName="resultValue" placeholder="Enter value">
+        </div>
+        
+        <div class="form-group">
+          <label>Technician Notes</label>
+          <textarea formControlName="technicianNotes" rows="3" placeholder="Additional notes..."></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="selectedResult = null">Cancel</button>
+          <button type="submit" [disabled]="resultForm.invalid">Save Result & Complete</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Completed Reports Table -->
+  <div class="glass-card mt-4">
+    <h2>Completed Reports</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Patient</th>
+            <th>Test</th>
+            <th>Result</th>
+            <th>Completed At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let report of completedReports">
+            <td><span class="badge">{{ report.testOrder?.orderNumber }}</span></td>
+            <td>{{ report.testOrder?.patientName }}</td>
+            <td>{{ report.testOrder?.testMaster?.testName }}</td>
+            <td><strong>{{ report.resultValue }}</strong></td>
+            <td>{{ report.updatedAt | date:'short' }}</td>
+          </tr>
+          <tr *ngIf="completedReports.length === 0">
+            <td colspan="5" class="text-center">No completed reports.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
